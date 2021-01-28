@@ -1,0 +1,19 @@
+#代码所有编码都是UTF-8
+#微服务名称
+spring:
+  application:
+    name: eureka-serve
+
+#端口
+server:
+  port: 5001
+
+eureka:
+  client:
+    #是否主要注册服务，它本来就是服务中心不需要注册
+    register-with-eureka: false
+    #是否需要获取服务，服务中心不需要
+    fetch-registry: false
+  #实例的IP
+  instance:
+    hostname: localhost

@@ -1,0 +1,12 @@
+eureka:
+  client:
+    serviceUrl:
+      #注册中心地址，没有zone，所以直接配置注册中心地址
+      defaultZone : http://localhost:5001/eureka/
+  instance:
+    hostname: 192.168.0.112
+
+#服务名称
+spring:
+  application:
+    name: user
