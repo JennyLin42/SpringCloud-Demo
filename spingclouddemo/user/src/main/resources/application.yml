@@ -10,3 +10,5 @@ eureka:
 spring:
   application:
     name: user
+  profiles:
+    active: peer2

@@ -3,10 +3,8 @@
 spring:
   application:
     name: eureka-serve
-
-#端口
-server:
-  port: 5001
+  profiles:
+    active: peer1
 
 eureka:
   client:
