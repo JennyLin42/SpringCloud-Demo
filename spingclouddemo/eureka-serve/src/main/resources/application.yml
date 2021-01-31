@@ -4,7 +4,7 @@ spring:
   application:
     name: eureka-serve
   profiles:
-    active: peer1
+    active: peer2
 
 eureka:
   client:
@@ -12,6 +12,11 @@ eureka:
     register-with-eureka: false
     #是否需要获取服务，服务中心不需要
     fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:5001/eureka/,http://localhost:5002/eureka/
   #实例的IP
   instance:
     hostname: localhost
+  #关闭eureka的自我保护机制
+  server:
+    enable-self-preservation: false
