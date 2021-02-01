@@ -9,4 +9,4 @@ spring:
   application:
     name: product
   profiles:
-    active: peer2
+    active: peer1

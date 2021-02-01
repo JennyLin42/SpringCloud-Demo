@@ -3,3 +3,15 @@
 
 2.运行说找不到application.yml文件，且确保yml文件没有错误以及多余的空格之类的。
 解决：把yml文件和项目的编码都改成UTF-8就可以了
+
+3.运行两个eureka和频繁启动关闭服务，之后访问注册中心:localhost:5001，发现正中央有红色警告：
+EMERGENCY! EUREKA MAY BE INCORRECTLY CLAIMING INSTANCES ARE UP WHEN THEY'RE NOT. RENEWALS ARE LESSER THAN THRESHOLD AND HENCE THE INSTANCES ARE NOT BEING EXPIRED JUST TO BE SAFE.
+分析：这是eureka的自我保护机制，当我们启动实例的时候，微服务实例会自动查到eureka进行注册，eureka自己也是如此。eureka在注册之后，会通过心跳告诉自己还活着，如果在运行期间，15分钟内低于85%的情况下心跳测试失败，则会出现此警告。
+解决：
+    方法一：由于单机测试中比较容易出现这个问题，所以在单机测试中可以配置：eureka.server.enable-self-preservation:false #取消自我保护机制，避免关闭微服务后微服务实例无法剔除储区的问题。
+线上的话还是使用true吧。
+    方法二：把85%的比例调低到45%这样
+
+4.第一次使用Ribbon客户端负载均衡，请求就报错：
+com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct instance of `com.pp.common.vo.ResultMessage` (no Creators, like default construct, exist): cannot deserialize from Object value (no delegate- or property-based Creator)
+解决：com.pp.common.vo.ResultMessage 添加一个无参构造函数，因为反序列化默认调用无参构造函数
