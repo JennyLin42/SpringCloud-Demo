@@ -1,4 +1,4 @@
-package com.example.fund;
+package com.pp.fund;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

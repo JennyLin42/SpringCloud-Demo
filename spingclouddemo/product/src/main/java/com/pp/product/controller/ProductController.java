@@ -1,4 +1,4 @@
-package com.example.product.controller;
+package com.pp.product.controller;
 
 import com.pp.common.vo.ResultMessage;
 import org.springframework.beans.factory.annotation.Autowired;

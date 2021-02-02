@@ -1,4 +1,4 @@
-package com.example.fund.controller;
+package com.pp.fund.controller;
 
 import com.pp.common.vo.ResultMessage;
 import org.springframework.http.HttpRequest;
