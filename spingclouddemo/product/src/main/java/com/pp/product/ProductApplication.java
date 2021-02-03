@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-//@EnableCircuitBreaker //引入hystrix断路器
+@EnableCircuitBreaker //引入hystrix断路器
 public class ProductApplication {
 
     public static void main(String[] args) {
