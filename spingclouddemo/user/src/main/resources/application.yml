@@ -11,4 +11,5 @@ spring:
   application:
     name: user
   profiles:
-    active: peer2
+    active: peer1
+
