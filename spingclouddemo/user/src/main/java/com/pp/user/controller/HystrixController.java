@@ -15,10 +15,11 @@ public class HystrixController {
 
     private static int MAX_SLEEP_TIME = 2000;
 
-    //http://localhost:6001/histrix/timeout
+    //http://localhost:6001/hystrix/timeout
     //可能会发生超时
     @GetMapping("/timeout")
     public ResultMessage getTimeout() {
+        System.out.println("有请求来了；timeout");
         Long sleepTime = (Long) (MAX_SLEEP_TIME * (new Double(Math.random())).longValue());
         try {
             Thread.sleep(sleepTime);
@@ -28,10 +29,11 @@ public class HystrixController {
         return new ResultMessage("200","执行成功！",null);
     }
 
-    //http://localhost:6001/histrix/exp/aaa
+    //http://localhost:6001/hystrix/exp/spring
     //可能会发生参数异常
     @GetMapping("/exp/{msg}")
     public ResultMessage getExp(@PathVariable("msg") String msg){
+        System.out.println("有请求来了；getExp");
         if("spring".equals(msg)){
             return new ResultMessage("200","执行成功！",null);
         } else{

@@ -2,10 +2,18 @@ package com.pp.product.facade.impl;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.ObservableExecutionMode;
+import com.netflix.hystrix.contrib.javanica.cache.annotation.CacheKey;
+import com.netflix.hystrix.contrib.javanica.cache.annotation.CacheRemove;
+import com.netflix.hystrix.contrib.javanica.cache.annotation.CacheResult;
 import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
 import com.pp.common.vo.ResultMessage;
+import com.pp.common.vo.UserInfo;
 import com.pp.product.facade.UserFacade;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import rx.Observable;
@@ -42,7 +50,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     @HystrixCommand(fallbackMethod = "fallback2")
     public ResultMessage getExp(String msg) {
-        String url = "http://USER/hystrix/exp/{msg}";
+        String url = "http://user/hystrix/exp/{msg}";
 
         return restTemplate.getForObject(url,ResultMessage.class,msg);
     }
@@ -113,23 +121,67 @@ public class UserFacadeImpl implements UserFacade {
         return new ResultMessage("200","文件存在",null);
     }
 
+    /**
+     * 保存HYstrix缓存
+     * @return
+     */
+    @HystrixCommand(fallbackMethod = "fallback5")
+    @CacheResult  //将结果缓存起来
+    public ResultMessage getUserInfo(Long id){
+        String url = "http://localhost:6001/user/info/{id}";
+        UserInfo userInfo = restTemplate.getForObject(url,UserInfo.class,id);
+        System.out.println("获取对象:"+id);
+        return new ResultMessage("200","获取user成功",userInfo.toString());
+    }
+
+    @HystrixCommand(fallbackMethod = "fallback5")
+    public ResultMessage getUserInfo2(Long id){
+        String url = "http://USER/user/info/{id}";
+        UserInfo userInfo = restTemplate.getForObject(url,UserInfo.class,id);
+        System.out.println("获取对象:"+id);
+        return new ResultMessage("200","获取user成功",userInfo.toString());
+    }
+
+    /**
+     * 移除hystrix缓存
+     * @return
+     */
+    @HystrixCommand
+    @CacheRemove(commandKey = "getUserInfo")//commanKey配置的是上面的CacheResult
+    public ResultMessage updateUserInfo(@CacheKey("id") UserInfo userInfo){
+        String url = "http://USER/user/info";
+        //请求头
+        HttpHeaders headers = new HttpHeaders();
+        //封装请求实体对象 将用户信息对象设置成请求体
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        //封装实体对象
+        HttpEntity<UserInfo> request = new HttpEntity<>(userInfo,headers);
+        System.out.println("执行更新对象"+userInfo.getId());
+        restTemplate.put(url,request);
+        return new ResultMessage("200","获取user成功",userInfo.toString());
+    }
+
+
 
 
     public ResultMessage fallback1(){
-        return new ResultMessage("404","熔断请求超时",null);
+        return new ResultMessage("404","timeout"+"熔断请求超时",null);
     }
 
     public ResultMessage fallback2(String msg){
-        return new ResultMessage("500",msg,null);
+        return new ResultMessage("500","getExp"+msg,null);
     }
 
     public ResultMessage fallback3(String[] params){
-        return new ResultMessage("501","调用参数异常"+params,null);
+        return new ResultMessage("501","userExpCommond调用参数异常"+params,null);
     }
-
 
     public ResultMessage fallback4(String msg,Throwable ex){
         ex.printStackTrace();
-        return new ResultMessage("600","获取异常",null);
+        return new ResultMessage("600","dealFile获取异常",null);
+    }
+
+    public ResultMessage fallback5(Long id){
+        return new ResultMessage("500","getUserInfo降级方法",null);
     }
 }

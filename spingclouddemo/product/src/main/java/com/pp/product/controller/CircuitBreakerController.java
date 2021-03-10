@@ -1,6 +1,8 @@
 package com.pp.product.controller;
 
+import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import com.pp.common.vo.ResultMessage;
+import com.pp.common.vo.UserInfo;
 import com.pp.product.facade.UserFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,7 @@ public class CircuitBreakerController {
         return userFacade.timeout();
     }
 
+    //http://localhost:7001/cr/exp/spring
     @GetMapping("/exp/{msg}")
     public ResultMessage getExp(@PathVariable("msg") String msg){
         return userFacade.getExp(msg);
@@ -59,6 +62,25 @@ public class CircuitBreakerController {
             resList.add(resultMsg);
         });
         return resList;
+    }
+
+    /**
+     * 测试缓存
+     * @return
+     */
+    //http://localhost:7001/cr/user/info/cache/1
+    @GetMapping("/user/info/cache/{id}")
+    public ResultMessage getUserInfo(@PathVariable Long id){
+        HystrixRequestContext context = HystrixRequestContext.initializeContext();
+        try{
+            //userFacade.getUserInfo(id);
+            //userFacade.getUserInfo(id);
+            //UserInfo userInfo = new UserInfo(id,"user_name_update","note_update");
+            //userFacade.updateUserInfo(userInfo);
+            return userFacade.getUserInfo2(id);
+        } finally {
+            context.close();
+        }
     }
 
     @GetMapping("/dealFile")
