@@ -55,4 +55,9 @@ public class FeignController {
     public ResultMessage uploadFile(@RequestPart("file") MultipartFile file) {
         return userFacade.uploadFile(file);
     }
+
+    @GetMapping("/hystrix/getTimeout")
+    public ResultMessage getTimeout() {
+        return userFacade.getTimeout();
+    }
 }

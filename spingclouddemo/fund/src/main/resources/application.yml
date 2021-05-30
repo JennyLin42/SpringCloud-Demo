@@ -1,12 +1,20 @@
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:5001/eureka/,http://localhost:5002/eureka/
+      defaultZone: http://localhost:5001/eureka/
+      #,http://localhost:5002/eureka/
   instance:
-    hostname: 192.168.0.112
+    hostname: 192.168.0.105
 
 spring:
   application:
     name: fund
   profiles:
-    active: peer2
+    active: peer1
+
+feign:
+  hystrix:
+    enabled: true
+  compression:
+    request:
+      enabled: true

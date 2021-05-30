@@ -2,6 +2,7 @@ package com.pp.fund.facade;
 
 import com.pp.common.vo.ResultMessage;
 import com.pp.common.vo.UserInfo;
+import com.pp.fund.fallback.UserFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,8 @@ import java.util.List;
 /**
  * 为啥这个东西这么像开发一个控制器~~
  */
-@FeignClient("user")//这里意思是调用user的微服务 底层使用ribben进行调用user微服务
+//这里意思是调用user的微服务 底层使用ribben进行调用user微服务
+@FeignClient(value = "user",fallback = UserFallback.class)
 public interface UserFacade {
 
     @GetMapping("/user/info/{id}")
@@ -38,4 +40,6 @@ public interface UserFacade {
     @RequestMapping(value = "/user/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResultMessage uploadFile(@RequestPart MultipartFile file);
 
+    @GetMapping("/hystrix/timeout")
+    public ResultMessage getTimeout() ;
 }
