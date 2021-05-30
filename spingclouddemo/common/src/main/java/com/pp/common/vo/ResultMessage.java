@@ -44,6 +44,11 @@ public class ResultMessage {
 
     }
 
+    public ResultMessage(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
+
     public ResultMessage(String code, String msg, Object result) {
         this.code = code;
         this.msg = msg;
