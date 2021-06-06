@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: zuul
+  profiles:
+    active: peer1
+
+eureka:
+  client:
+    serviceUrl:
+      #注册中心地址，没有zone，所以直接配置注册中心地址
+      defaultZone : http://localhost:5001/eureka/
+  instance:
+    hostname: localhost
+
+zuul:
+  routes:
+    user-service:
+      path: /u/**
+      service-id: user
+    fund-service:
+      path: /p/**
+      service-id: fund
